@@ -1,0 +1,19 @@
+#######################################
+# Syntax Coloring Map For MUX Library
+#######################################
+
+#######################################
+# Datatypes (KEYWORD1)
+#######################################
+FansElectronics_SevenSegmen595	KEYWORD1
+SevenSegmen595	    			KEYWORD1
+
+#######################################
+# Methods and Functions (KEYWORD2)
+#######################################
+
+setNumber    		KEYWORD2
+clear        		KEYWORD2
+TRAINER        		KEYWORD2
+MODULE      		KEYWORD2
+

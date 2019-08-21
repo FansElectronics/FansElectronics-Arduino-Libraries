@@ -1,0 +1,38 @@
+################################################################################
+# Syntax Coloring Map For PrayerTimes
+################################################################################
+
+################################################################################
+# Datatypes (KEYWORD1)
+################################################################################
+
+PrayerTimes 					KEYWORD1
+
+################################################################################
+# Methods and Functions (KEYWORD2)
+################################################################################
+
+initialize						KEYWORD2
+void compute_times				KEYWORD2
+adjust_times 					KEYWORD2
+day_portion						KEYWORD2
+set_calc_method					KEYWORD2
+adjust_high_lat_times			KEYWORD2
+set_asr_method					KEYWORD2
+set_high_lats_adjust_method		KEYWORD2
+set_calc_method					KEYWORD2
+set_fajr_angle					KEYWORD2
+set_maghrib_angle				KEYWORD2
+set_isha_angle					KEYWORD2
+	
+get_prayer_times				KEYWORD2
+get_float_time_parts			KEYWORD2
+
+################################################################################
+# Instances (KEYWORD2)
+################################################################################
+
+
+################################################################################
+# Constants (LITERAL1)
+################################################################################

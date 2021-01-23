@@ -128,21 +128,21 @@ void
 }
 
 void DMD::drawString(int bX, int bY, const char *bChars, byte length,
-		     byte bGraphicsMode)
+             byte bGraphicsMode)
 {
     if (bX >= (DMD_PIXELS_ACROSS*DisplaysWide) || bY >= DMD_PIXELS_DOWN * DisplaysHigh)
-	return;
+    return;
     uint8_t height = pgm_read_byte(this->Font + FONT_HEIGHT);
     if (bY+height<0) return;
 
     int strWidth = 0;
-	this->drawLine(bX -1 , bY, bX -1 , bY + height, GRAPHICS_INVERSE);
+    this->drawLine(bX -1 , bY, bX -1 , bY + height, GRAPHICS_INVERSE);
 
     for (int i = 0; i < length; i++) {
         int charWide = this->drawChar(bX+strWidth, bY, bChars[i], bGraphicsMode);
-	    if (charWide > 0) {
-	        strWidth += charWide ;
-	        this->drawLine(bX + strWidth , bY, bX + strWidth , bY + height, GRAPHICS_INVERSE);
+        if (charWide > 0) {
+            strWidth += charWide ;
+            this->drawLine(bX + strWidth , bY, bX + strWidth , bY + height, GRAPHICS_INVERSE);
             strWidth++;
         } else if (charWide < 0) {
             return;
@@ -150,6 +150,7 @@ void DMD::drawString(int bX, int bY, const char *bChars, byte length,
         if ((bX + strWidth) >= DMD_PIXELS_ACROSS * DisplaysWide || bY >= DMD_PIXELS_DOWN * DisplaysHigh) return;
     }
 }
+
 void DMD::drawStringCenter(int dimension, int bX, int bY, const char *bChars, byte length,
 		     byte bGraphicsMode)
 {
@@ -185,6 +186,7 @@ void DMD::drawStringCenter(int dimension, int bX, int bY, const char *bChars, by
         if ((bX + strWidth) >= DMD_PIXELS_ACROSS * DisplaysWide || bY >= DMD_PIXELS_DOWN * DisplaysHigh) return;
     }
 }
+
 void DMD::drawMarquee(const char *bChars, byte length, int left, int top)
 {
     marqueeWidth = 0;
@@ -579,53 +581,4 @@ int DMD::charWidth(const unsigned char letter)
 	    width = pgm_read_byte(this->Font + FONT_WIDTH_TABLE + c);
     }
     return width;
-}
-
-//**************************************************************************************
-// stepSplitMarquee(int topRow, int bottomRow)
-// This is a cut-down modification of stepMarquee(). It steps only the rows specified.
-// Only horizontal, single step, left scroll is catered for.
-// This function allows you to have only a part of the DMD array scrolling, while the
-// remainder stays still and is not cleared during scrolling.
-//**************************************************************************************
-
-boolean DMD::stepSplitMarquee(int topRow, int bottomRow)
-{
-  boolean ret=false;
-  marqueeOffsetX += -1;  // only scroll horizontally, 1 place left
-  if (marqueeOffsetX < -marqueeWidth) { // if text has scrolled off the screen
-    marqueeOffsetX = DMD_PIXELS_ACROSS * DisplaysWide; // set up to scroll again from the far right
-    drawFilledBox(0, topRow, DisplaysWide*DMD_PIXELS_ACROSS-1, bottomRow, GRAPHICS_INVERSE); // clear the scroll rows
-    ret=true; // indicates that this scroll has completed
-  }
-
-// This is the main change from the original function.
-// It splits the left shift task into rows and bytes within a row to allow rows to be identified
-// and treated separately.
-  for (int row=topRow ;row<=bottomRow; row++) { // loop for each row in the scroll area
-    for (int byteInRow=0; byteInRow<DisplaysWide*4; byteInRow++) { // loop for each byte within a row (4 per DMD across)
-      int thisIndex = (DisplaysTotal*4)*(row%16) + (4*DisplaysWide*(row/16)) + byteInRow; //calculate index into screen buffer
-      if ((byteInRow%(DisplaysWide*4)) == (DisplaysWide*4) -1) {  // if it's the last byte in a row
-        bDMDScreenRAM[thisIndex]=(bDMDScreenRAM[thisIndex]<<1)+1;
-        // shift bits left, and puts a '1' in last position (a '1' = LED OFF)
-   
-      } else {                                            // if it's NOT the last byte in a row
-        bDMDScreenRAM[thisIndex]=(bDMDScreenRAM[thisIndex]<<1) +
-                    ((bDMDScreenRAM[thisIndex+1] & 0x80) >>7);
-        // shift bits left as well as the shifting the MSB of the next byte into the LSB
-      }
-    }
-  }
-  // Redraw last char on screen
-  // required because
-  int strWidth=marqueeOffsetX;
-  for (byte i=0; i < marqueeLength; i++) {
-    int wide = charWidth(marqueeText[i]);
-    if (strWidth+wide >= DisplaysWide*DMD_PIXELS_ACROSS) {
-      drawChar(strWidth, marqueeOffsetY,marqueeText[i],GRAPHICS_NORMAL);
-      return ret;
-    }
-    strWidth += wide+1;
-  }
-  return ret;
 }

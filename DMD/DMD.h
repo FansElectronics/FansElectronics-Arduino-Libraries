@@ -129,6 +129,7 @@ class DMD
   //Draw a string
   void drawString( int bX, int bY, const char* bChars, byte length, byte bGraphicsMode);
   void drawStringCenter(int dimension, int bX, int bY, const char* bChars, byte length, byte bGraphicsMode);
+
   //Select a text font
   void selectFont(const uint8_t* font);
 
@@ -137,10 +138,6 @@ class DMD
 
   //Find the width of a character
   int charWidth(const unsigned char letter);
-
-  //Move the marquee left 1 place - special case of stepMarque()
-  // which only scrolls a limited portion of the display
-  boolean stepSplitMarquee(int topRow, int bottomRow);
 
   //Draw a scrolling string
   void drawMarquee( const char* bChars, byte length, int left, int top);
